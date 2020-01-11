@@ -946,19 +946,18 @@ class BinaryQF(SageObject):
             # Buchmann/Vollmer assume the discriminant to be non-square
             raise NotImplementedError('computation of cycles is only '
                     'implemented for non-square discriminants')
-        if proper:
-            # Prop 6.10.5 in Buchmann Vollmer
-            C = self.cycle(proper=False)
-            if len(C) % 2:
-                return C
-            else:
-                return C[:1] + [q._Tau() for q in C[1:]]
         if not hasattr(self, '_cycle_list'):
             C = [self]
-            Q1 = self._RhoTau()
+            if proper:
+                Q1 = self._Rho()
+            else:
+                Q1 = self._RhoTau()      
             while not self == Q1:
                 C.append(Q1)
-                Q1 = Q1._RhoTau()
+                if proper:
+                    Q1 = Q1._Rho()
+                else:
+                    Q1 = Q1._RhoTau()
             self._cycle_list = C
         return self._cycle_list
 
